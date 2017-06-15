@@ -2,18 +2,27 @@
 <!DOCTYPE html>
 <!-- created by blp.bat -->
 <html>
+<head>
+<script src = "bls.js"></script>	
+</head>
 <body>
 
 <div id="blVer">
 <a href = "https://littleflute.github.io/blog/html/tools/blp/" target = "_blank">home</a>-
 <a href = "https://github.com/littleflute/blog/new/master/html/tools/blp" target = "_blank">new</a>-
-<a href = "https://github.com/littleflute/blog/issues/229" target="_blank">log</a> - v0.5.5
-:u: blObj.
+<a href = "https://github.com/littleflute/blog/issues/229" target="_blank">log</a> - v0.8.6
+:+: bls.js(https://littleflute.github.io/blog/js/bls.js).
+<span id = "blDbg"></span>
 </div>
 <textarea id = "blMp4Player" style = "display:none;">
 this.blMp4Player = function (){
- this.blMp4Player.blV = "v0.5.4";
- this.blMp4Player.u1 = "v0.5.4:: work as: this.blMp4Player";
+ this.blMp4Player.blV = "v0.5.9";
+ this.blMp4Player.v059 = "+: if(f.length>1) document.blLoadOK = true;";
+ this.blMp4Player.v058 = "m: d.id = i; auto play next song";
+ this.blMp4Player.v057 = "+: v.playObj";
+ this.blMp4Player.v056 = "+: onclick : to play";
+ this.blMp4Player.v055 = "+: idDirLyr";
+ this.blMp4Player.v054 = "work as: this.blMp4Player";
 
  var d = document.getElementById("idDivBlMp4Player");
  if(!d){
@@ -23,11 +32,62 @@ this.blMp4Player = function (){
     document.body.appendChild(d);
     var v = document.createElement("video");
     v.id = "idBlMp4Player";
+    v.volume = 0.2;
     d.appendChild(v);
+    v.oLast = null;
+    v.playObj = function (o){  
+       if(v.oLast) {						
+            v.oLast.style.backgroundColor = "green";}
+       v.src = o.innerHTML;
+       v.play();
+       o.style.backgroundColor="yellow";	
+       v.oLast = o;
+    }
+
+    var l = document.createElement("div");
+    l.id = "idDivLyr";
+    l.style.border = "1px solid red";
+    d.appendChild(l);
+
     this.blMp4Player.v = v;
     this.blMp4Player.d = d;
  }
+	
+    this.blMp4Player.blMakeList = function(){	 		
+       var boss = document.getElementById("idDivBlMp4Player");			
+       for (var i = 1; i<f.length;i++)
+       {	
+          var d = document.createElement("button");
+          d.style.border = "1px solid blue";
+       	  d.id = i;//"song"+i;
+          d.onclick = function(){
+		var v = document.getElementById("idBlMp4Player");
+                v.playObj(this);
+	  }
+          d.innerHTML = f[i];
+          boss.appendChild(d);
+       }
+       if(f.length>1) document.blLoadOK = true;				 
+   }	
+    this.blMp4Player.myTimeFun = function(){	 		
+       var p = document.getElementById("idBlMp4Player"); 		
+       var lr = document.getElementById("idDivLyr");	 	 
+       lr.innerHTML = new Date();
+       if(p.ended){
+          var v = document.getElementById("idBlMp4Player");
+          var id = parseInt(v.oLast.id)+1;
+          var b = document.getElementById(id);
+          if(b==null) b = document.getElementById("1");	
+          b.click();
+       }						 
+   }				
+							
+   setInterval(this.blMp4Player.myTimeFun, 1000);
+
 }
+
+this.blMp4Player();
+this.blMp4Player.blMakeList();
 </textarea>
 
 <textarea id = "blObj" style = "display:none;">
@@ -260,6 +320,7 @@ function blCreateUI(){
 	var t = document.getElementsByTagName("textarea");
 	for (var i = 0; i < t.length; i++){
 		var b = document.createElement("button");
+		b.id = t[i].id + "Btn";
 		if("run"==t[i].id) {
 			b.onclick = run;
 			b.style.backgroundColor = "green";
@@ -268,8 +329,32 @@ function blCreateUI(){
 		b.innerHTML = t[i].id;
 		document.body.appendChild(b);
 	}
+	document.blLoadOK = false;
+	function gBlTimerFun(){
+		var s1 = document.getElementById("s1");
+		var blScriptBtn = document.getElementById("blScriptBtn");
+		var runBtn = document.getElementById("runBtn");
+		var fTest = "blNull";
+		if(!s1){
+			if(blScriptBtn) blScriptBtn.click();
+			if(runBtn) runBtn.click();
+		}
+		else if(!document.blLoadOK){
+			fTest = f[0];//"blOK";
+			var blMp4PlayerBtn = document.getElementById("blMp4PlayerBtn");
+		
+			if(blMp4PlayerBtn) blMp4PlayerBtn.click();
+			if(runBtn) runBtn.click();
+			var song1Btn = document.getElementById("1");
+          		if(song1Btn) song1Btn.click();	
+		}
+			var blDbg = document.getElementById("blDbg");
+			blDbg.innerHTML = new Date() + s1 + ":" + fTest;
+	}
+        setInterval(gBlTimerFun, 1000);
 }
 blCreateUI();
+
 
 function blBtnClick() {
 	var id = this.innerHTML;
